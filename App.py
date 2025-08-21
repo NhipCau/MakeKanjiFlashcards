@@ -58,9 +58,9 @@ def add_textbox(slide, text, y_percent, font_size, height_percent=0.18, bold=Fal
     * height_percent はデフォ 18%（訳語エリアは複数行になりやすいので余裕）
     """
     textbox = slide.shapes.add_textbox(
-        left=int(SLIDE_WIDTH * 0.05),
+        left=int(SLIDE_WIDTH * 0.02),
         top=int(SLIDE_HEIGHT * y_percent),
-        width=int(SLIDE_WIDTH * 0.90),
+        width=int(SLIDE_WIDTH * 0.96),
         height=int(SLIDE_HEIGHT * height_percent),
     )
     tf = textbox.text_frame
