@@ -10,7 +10,7 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
 from pathlib import Path
 
-st.title("📄 漢字フラッシュカード作成ツール（2枚構成）")
+st.title("📄 漢字Flashcard作成ツール（2枚構成）")
 
 # ── ファイル入力 ─────────────────────────────────────────
 uploaded_file = st.file_uploader("Excel または CSV をアップロード", type=["xlsx", "csv"])
