@@ -7,3 +7,10 @@ You can use Web app instantly on below link.
 以下のリンクからすぐにWebアプリをご利用いただけます。
 
 https://makekanjiflashcards.streamlit.app/
+
+User's manual is on below User'sマニュアルは以下です。
+
+If you want to use printed flashcards as realia, you can print only the even-numbered pages and fold the paper. This way, Kanji will appear on the front side and Hiragana on the back. You can use the folded cards for quizzes by flipping them during class.
+
+印刷したフラッシュカードを教材として使いたい場合は、偶数ページだけを印刷して折り畳んでください。
+こうすることで、表面に漢字、裏面にひらがなが表示されます。折り畳んだカードを授業中にめくって、クイズなどに使用することができます。
