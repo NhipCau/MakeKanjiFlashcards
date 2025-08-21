@@ -1,122 +1,148 @@
 # ===== 必要ライブラリ =====
-import streamlit as st
+# app.py
 import pandas as pd
+import streamlit as st
 from deep_translator import GoogleTranslator
 from pptx import Presentation
 from pptx.util import Pt
 from pptx.enum.text import PP_ALIGN
-import io
+from pptx.enum.shapes import MSO_SHAPE
+from pptx.dml.color import RGBColor
+from pathlib import Path
 
-# ==== 設定 ====
-DEFAULT_LANGUAGES = ["en", "vi", "ne", "my", "zh-CN", "zh-TW"]  # デフォルト翻訳言語
+st.title("📄 日本語語彙カード作成ツール（2枚構成）")
+
+# ── ファイル入力 ─────────────────────────────────────────
+uploaded_file = st.file_uploader("Excel または CSV をアップロード", type=["xlsx", "csv"])
+
+# ===== 設定 =====
+# 列指定（番号 or 列名）
+col_kanji_raw = st.text_input("漢字（A列）の列名または番号", value="0")
+col_hira_raw  = st.text_input("ひらがな（B列）の列名または番号", value="1")
+
+# 翻訳対象言語（カンマ区切り）
+langs_str = st.text_input("翻訳対象言語（カンマ区切り）", value="en,vi,ne,my,zh-CN,zh-TW")
+target_languages = [s.strip() for s in langs_str.split(",") if s.strip()]
+
+# 位置（％指定）— 0〜100 をスライダーで
+st.subheader("位置（％）設定")
+kanji_y_percent = st.slider("漢字の縦位置（％）", 0, 100, 15) / 100.0
+hira_y_percent  = st.slider("ひらがなの縦位置（％）", 0, 100, 52) / 100.0
+trans_y_percent = st.slider("訳語の縦位置（％）", 0, 100, 68) / 100.0
+
+# フォントサイズ
+st.subheader("フォントサイズ")
+fs_kanji = st.number_input("漢字フォントサイズ", value=84, min_value=10, max_value=200)
+fs_hira  = st.number_input("ひらがなフォントサイズ", value=70, min_value=10, max_value=200)
+fs_trans = st.number_input("訳語フォントサイズ", value=35, min_value=8,  max_value=120)
 
 # スライドサイズ（EMU）
-SLIDE_WIDTH = 914400 * 10
-SLIDE_HEIGHT = 914400 * 7.5
+SLIDE_WIDTH  = 914400 * 10    # 10 inch
+SLIDE_HEIGHT = 914400 * 7.5   # 7.5 inch
 
+# ===== 関数 =====
+def parse_col_selector(raw, df_cols):
+    """数値っぽければ int、そうでなければ列名として返す"""
+    try:
+        i = int(raw)
+        return i
+    except ValueError:
+        # 列名が本当に存在するか軽くチェック
+        return raw
 
-# ==== テキストボックス関数 ====
-def add_textbox(slide, text, y_percent, font_size):
+def add_textbox(slide, text, y_percent, font_size, height_percent=0.18, bold=False):
+    """
+    中央寄せのテキストボックスを追加。
+    * ワードラップを有効化（長文でも折り返し）
+    * width はスライドの 90%（左右 5% 余白）
+    * height_percent はデフォ 18%（訳語エリアは複数行になりやすいので余裕）
+    """
     textbox = slide.shapes.add_textbox(
-        left=0,
+        left=int(SLIDE_WIDTH * 0.05),
         top=int(SLIDE_HEIGHT * y_percent),
-        width=SLIDE_WIDTH,
-        height=int(SLIDE_HEIGHT * 0.15),
+        width=int(SLIDE_WIDTH * 0.90),
+        height=int(SLIDE_HEIGHT * height_percent),
     )
     tf = textbox.text_frame
     tf.clear()
+    tf.word_wrap = True  # ← 自動折返しON
+
     p = tf.paragraphs[0]
     run = p.add_run()
     run.text = text
     run.font.size = Pt(font_size)
+    run.font.bold = bold
     p.alignment = PP_ALIGN.CENTER
 
-
-# ==== 横線 ====
 def add_center_line(slide):
-    slide.shapes.add_shape(
-        1,  # msoShapeRectangleを細長く
+    """スライド中央に横線（全幅）"""
+    shape = slide.shapes.add_shape(
+        MSO_SHAPE.RECTANGLE,
         left=0,
         top=int(SLIDE_HEIGHT * 0.5),
         width=SLIDE_WIDTH,
-        height=Pt(2),
+        height=Pt(2),  # 2pt の細い帯
     )
+    fill = shape.fill
+    fill.solid()
+    fill.fore_color.rgb = RGBColor(0, 0, 0)
+    # 枠線はいらない
+    shape.line.fill.background()
 
-
-# ==== 翻訳 ====
 def translate_word(word, lang):
     try:
         return GoogleTranslator(source="ja", target=lang).translate(word)
     except Exception:
         return f"[Error:{lang}]"
 
-
-# ==== PPT作成関数 ====
-def create_ppt_from_vocab(df, target_languages, font_sizes):
+def create_ppt(df, col_kanji, col_hira, outfile_base: str):
     prs = Presentation()
+
     for _, row in df.iterrows():
-        word = str(row.iloc[0]).strip()
-        ruby = str(row.iloc[1]).strip()
+        # 列の取得（番号 or 列名）
+        kanji = str(row.iloc[col_kanji]).strip() if isinstance(col_kanji, int) else str(row[col_kanji]).strip()
+        hira  = str(row.iloc[col_hira]).strip()  if isinstance(col_hira, int)  else str(row[col_hira]).strip()
 
-        # --- Slide1 ---
-        slide1 = prs.slides.add_slide(prs.slide_layouts[6])
-        add_textbox(slide1, word, 0.15, font_sizes["kanji"])
-        add_center_line(slide1)
+        # --- Slide 1: 漢字のみ（上半分中央）
+        s1 = prs.slides.add_slide(prs.slide_layouts[6])
+        add_textbox(s1, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
+        add_center_line(s1)
 
-        # --- Slide2 ---
-        slide2 = prs.slides.add_slide(prs.slide_layouts[6])
-        add_textbox(slide2, word, 0.15, font_sizes["kanji"])
-        add_textbox(slide2, ruby, 0.52, font_sizes["hiragana"])
+        # --- Slide 2: 漢字 + ひらがな + 訳語
+        s2 = prs.slides.add_slide(prs.slide_layouts[6])
+        add_textbox(s2, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
+        add_textbox(s2, hira,  hira_y_percent,  fs_hira,  height_percent=0.20)
 
-        translations = [translate_word(word, lang) for lang in target_languages]
-        add_textbox(
-            slide2, "   ".join(translations), 0.68, font_sizes["translation"]
-        )
-        add_center_line(slide2)
+        translations = [translate_word(kanji, lang) for lang in target_languages]
+        add_textbox(s2, "   ".join(translations), trans_y_percent, fs_trans, height_percent=0.22)
 
-    pptx_io = io.BytesIO()
-    prs.save(pptx_io)
-    pptx_io.seek(0)
-    return pptx_io
+        add_center_line(s2)
 
+    out_name = f"{outfile_base}_flashcards.pptx"
+    prs.save(out_name)
+    return out_name
 
-# ================= Streamlit UI =================
-st.title("📚 漢字フラッシュカード自動生成ツール")
-
-uploaded_file = st.file_uploader("語彙リストをアップロード (CSV または Excel)", type=["csv", "xlsx"])
-
-# 設定パネル
-with st.sidebar:
-    st.header("⚙️ 設定")
-    langs = st.text_input("翻訳言語（カンマ区切り）", ",".join(DEFAULT_LANGUAGES))
-    target_languages = [lang.strip() for lang in langs.split(",") if lang.strip()]
-
-    font_kanji = st.number_input("フォントサイズ（漢字）", 40, 200, 84)
-    font_hira = st.number_input("フォントサイズ（ひらがな）", 20, 150, 70)
-    font_trans = st.number_input("フォントサイズ（翻訳語）", 15, 100, 35)
-
-    font_sizes = {
-        "kanji": font_kanji,
-        "hiragana": font_hira,
-        "translation": font_trans,
-    }
-
+# ── 実行 ─────────────────────────────────────────
 if uploaded_file:
-    if uploaded_file.name.endswith(".csv"):
-        df = pd.read_csv(uploaded_file)
-    else:
+    # 列指定の型を決定
+    col_kanji = parse_col_selector(col_kanji_raw, None)
+    col_hira  = parse_col_selector(col_hira_raw, None)
+
+    # 読み込み
+    if uploaded_file.name.endswith(".xlsx"):
         df = pd.read_excel(uploaded_file)
+    else:
+        df = pd.read_csv(uploaded_file)
 
-    st.write("✅ 読み込んだデータプレビュー")
-    st.dataframe(df.head())
+    # 出力名：アップロード元のベース名を利用
+    base = Path(uploaded_file.name).stem
 
-    if st.button("PPTXを生成"):
-        pptx_file = create_ppt_from_vocab(df, target_languages, font_sizes)
-        st.success("PPTXファイルを生成しました！")
-
-        st.download_button(
-            label="📥 ダウンロード",
-            data=pptx_file,
-            file_name="KanjiFlashcards.pptx",
-            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-        )
+    if st.button("PPT を作成"):
+        ppt_path = create_ppt(df, col_kanji, col_hira, base)
+        with open(ppt_path, "rb") as f:
+            st.download_button(
+                "📥 PPTX をダウンロード",
+                data=f,
+                file_name=Path(ppt_path).name,
+                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            )
