@@ -3,12 +3,11 @@ Automatic Kanji Flashcards Maker for Japanese teachers and learners. Instantly c
 
 日本語教師と学習者のための自動漢字フラッシュカード作成アプリです。このアプリは、一度に複数の漢字フラッシュカードをPowerPointスライドに作成できます。作成されたスライドは、1ページ目に漢字、2ページ目に漢字、ひらがな、語彙の翻訳が表示されます。フォントサイズ、位置、翻訳言語を設定できます。このアプリは、授業での漢字読みクイズなどに役立ちます。
 
-You can use Web app instantly on below link.
-以下のリンクからすぐにWebアプリをご利用いただけます。
+You can use Web app instantly on below link.  以下のリンクからすぐにWebアプリをご利用いただけます。
 
 https://makekanjiflashcards.streamlit.app/
 
-User's manual is on below User'sマニュアルは以下です。
+User's manual is on below.   User'sマニュアルは以下です。
 
 If you want to use printed flashcards as realia, you can print only the even-numbered pages and fold the paper. This way, Kanji will appear on the front side and Hiragana on the back. You can use the folded cards for quizzes by flipping them during class.
 
