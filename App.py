@@ -10,7 +10,17 @@ from pptx.enum.shapes import MSO_SHAPE
 from pptx.dml.color import RGBColor
 from pathlib import Path
 
-st.title("📄 漢字Flashcard作成ツール（2枚構成）")
+#st.title("📄 漢字Flashcard作成ツール（2枚構成）") #デフォルトタイトル設定の場合はこっち
+
+st.markdown(
+    """
+    <h1 style="margin-bottom:0;">
+        漢字Flashcard作成ツール
+        <span style="font-size:0.6em; color:gray; font-weight:normal;">（2枚構成）</span>
+    </h1>
+    """,
+    unsafe_allow_html=True
+)
 
 # ── ファイル入力 ─────────────────────────────────────────
 uploaded_file = st.file_uploader("Excel または CSV をアップロード", type=["xlsx", "csv"])
