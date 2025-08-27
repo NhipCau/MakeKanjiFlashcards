@@ -17,8 +17,8 @@ uploaded_file = st.file_uploader("Excel または CSV をアップロード", ty
 
 # ===== 設定 =====
 # 列指定（番号 or 列名）
-col_kanji_raw = st.text_input("漢字（A列）の列名または番号", value="0")
-col_hira_raw  = st.text_input("ひらがな（B列）の列名または番号", value="1")
+col_kanji_raw = st.text_input("漢字（A列）の列名または番号（A列=0）", value="0")
+col_hira_raw  = st.text_input("ひらがな（B列）の列名または番号（B列=1）", value="1")
 
 # 翻訳対象言語（カンマ区切り）
 langs_str = st.text_input("翻訳対象言語（カンマ区切り）", value="en,vi,ne,my,zh-CN,zh-TW")
