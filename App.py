@@ -28,7 +28,7 @@ uploaded_file = st.file_uploader("Excel または CSV をアップロード", ty
 # ===== 設定 =====
 # 列指定（番号 or 列名）
 col_kanji_raw = st.text_input("漢字（A列）の列名または番号（A列=0）", value="0")
-col_hira_raw  = st.text_input("ひらがな（B列）の列名または番号（B列=1）", value="1")
+col_hira_raw  = st.text_input("ふりがな（B列）の列名または番号（B列=1）", value="1")
 
 # 翻訳対象言語（カンマ区切り）
 langs_str = st.text_input("翻訳対象言語（カンマ区切り）", value="en,vi,ne,my,zh-CN,zh-TW")
@@ -37,13 +37,13 @@ target_languages = [s.strip() for s in langs_str.split(",") if s.strip()]
 # 位置（％指定）— 0〜100 をスライダーで
 st.subheader("位置（％）設定")
 kanji_y_percent = st.slider("漢字の縦位置（％）", 0, 100, 15) / 100.0
-hira_y_percent  = st.slider("ひらがなの縦位置（％）", 0, 100, 52) / 100.0
+hira_y_percent  = st.slider("ふりがなの縦位置（％）", 0, 100, 52) / 100.0
 trans_y_percent = st.slider("訳語の縦位置（％）", 0, 100, 68) / 100.0
 
 # フォントサイズ
 st.subheader("フォントサイズ")
 fs_kanji = st.number_input("漢字フォントサイズ", value=84, min_value=10, max_value=200)
-fs_hira  = st.number_input("ひらがなフォントサイズ", value=70, min_value=10, max_value=200)
+fs_hira  = st.number_input("ふりがなフォントサイズ", value=70, min_value=10, max_value=200)
 fs_trans = st.number_input("訳語フォントサイズ", value=35, min_value=8,  max_value=120)
 
 # スライドサイズ（EMU）
@@ -118,7 +118,7 @@ def create_ppt(df, col_kanji, col_hira, outfile_base: str):
         add_textbox(s1, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
         add_center_line(s1)
 
-        # --- Slide 2: 漢字 + ひらがな + 訳語
+        # --- Slide 2: 漢字 + ふりがな + 訳語
         s2 = prs.slides.add_slide(prs.slide_layouts[6])
         add_textbox(s2, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
         add_textbox(s2, hira,  hira_y_percent,  fs_hira,  height_percent=0.20)
