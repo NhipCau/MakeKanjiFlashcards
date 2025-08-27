@@ -14,8 +14,6 @@ Below Link is for User's Manual 下記リンクでユーザーマニュアルの
 
 Please reffer the below Link to find language codes for translate. 翻訳用言語コードは以下リンクを参照 https://cloud.google.com/translate/docs/languages?hl=ja
 
-User's manual is on below.   User'sマニュアルは以下です。
-
 # Useful info
 You can use a Kanji slideshow in PowerPoint that has created by this tool, where the first slide shows only the Kanji, and the second slide shows the Kanji, Hiragana, and translations. This structure makes it easy to use the slides as a quiz: simply show the first slide for the question, then click or press the right arrow to reveal the answer.
 This tool generates all slides for all words in your list at once, so you can smoothly present question and answer slides in sequence like quiz during your class.
