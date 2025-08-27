@@ -7,6 +7,13 @@ You can use Web app instantly on below link.  以下のリンクからすぐにW
 
 https://makekanjiflashcards.streamlit.app/
 
+# User's Manual
+Below Link is for User's Manual 下記リンクでユーザーマニュアルの確認可能です。
+
+[https://makevocabpiccard.my.canva.site/](https://makevocabpiccard.my.canva.site/makekanjiflashcards)
+
+Please reffer the below Link to find language codes for translate. 翻訳用言語コードは以下リンクを参照 https://cloud.google.com/translate/docs/languages?hl=ja
+
 User's manual is on below.   User'sマニュアルは以下です。
 
 # Useful info
