@@ -31,7 +31,7 @@ col_kanji_raw = st.text_input("漢字（A列）の列名または番号（A列=0
 col_hira_raw  = st.text_input("ふりがな（B列）の列名または番号（B列=1）", value="1")
 
 # 翻訳対象言語（カンマ区切り）
-langs_str = st.text_input("翻訳対象言語（カンマ区切り）", value="en,vi,ne,my,zh-CN,zh-TW")
+langs_str = st.text_input("翻訳対象言語（カンマ区切り）  [言語コードはこちら](https://cloud.google.com/translate/docs/languages?hl=ja)", value="en,vi,ne,my,zh-CN,zh-TW")
 target_languages = [s.strip() for s in langs_str.split(",") if s.strip()]
 
 # 位置（％指定）— 0〜100 をスライダーで
