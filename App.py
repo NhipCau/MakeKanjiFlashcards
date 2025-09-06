@@ -37,7 +37,7 @@ uploaded_file = st.file_uploader("Excel または CSV をアップロード", ty
 # ===== 設定 =====
 # 列指定（番号 or 列名）
 col_kanji_raw = st.text_input("漢字の列名 または番号（A列=0）", value="0")
-col_hira_raw  = st.text_input("ふりがな（読み方）列名または番号（B列=1）", value="1")
+col_hira_raw  = st.text_input("ふりがな（読み方）列名 または番号（B列=1）", value="1")
 
 # 翻訳対象言語（カンマ区切り）
 langs_str = st.text_input("翻訳対象言語（カンマ区切り）  [言語コードはこちら](https://cloud.google.com/translate/docs/languages?hl=ja)", value="en,vi,ne,my,zh-CN,zh-TW")
