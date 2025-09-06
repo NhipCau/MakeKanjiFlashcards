@@ -18,9 +18,18 @@ st.markdown(
         漢字Flashcard作成ツール
         <span style="font-size:0.6em; color:gray; font-weight:normal;">（2枚構成）</span>
     </h1>
+    <p style="margin-top:4px; font-size:0.95em; color:#444;">
+        ユーザーマニュアルは 
+        <a href="https://makevocabpiccard.my.canva.site/makekanjiflashcards" 
+           target="_blank" 
+           style="color:#1E90FF; text-decoration:none; font-weight:bold;">
+           こちら
+        </a>
+    </p>
     """,
     unsafe_allow_html=True
 )
+
 
 # ── ファイル入力 ─────────────────────────────────────────
 uploaded_file = st.file_uploader("Excel または CSV をアップロード", type=["xlsx", "csv"])
