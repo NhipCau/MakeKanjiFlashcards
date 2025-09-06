@@ -18,7 +18,7 @@ st.markdown(
         漢字Flashcard作成ツール
         <span style="font-size:0.6em; color:gray; font-weight:normal;">（2枚構成）</span>
     </h1>
-    <p style="margin-top:4px; font-size:0.95em; color:#444;">
+    <p style="margin-top:2px; font-size:1.2em; color:dimgray;">
         ユーザーマニュアルは 
         <a href="https://makevocabpiccard.my.canva.site/makekanjiflashcards" 
            target="_blank" 
