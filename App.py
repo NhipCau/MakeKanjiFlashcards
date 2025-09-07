@@ -153,6 +153,9 @@ if uploaded_file:
     else:
         df = pd.read_csv(uploaded_file)
 
+    # NaN を空文字に変換
+    df = df.fillna("")
+
     # 出力名：アップロード元のベース名を利用
     base = Path(uploaded_file.name).stem
 
