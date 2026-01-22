@@ -49,6 +49,22 @@ kanji_y_percent = st.slider("漢字の縦位置（％）", 0, 100, 15) / 100.0
 hira_y_percent  = st.slider("ふりがな（読み方）の縦位置（％）", 0, 100, 52) / 100.0
 trans_y_percent = st.slider("訳語の縦位置（％）", 0, 100, 68) / 100.0
 
+# フォント選択
+st.subheader("フォント設定")
+
+font_choice = st.radio(
+    "使用フォント",
+    (
+        "UDデジタル教科書体（※使用PCにインストールされている場合のみ）",
+        "Noto Sans JP（※Web・環境差を避けたい場合に推奨）",
+    ),
+)
+
+if font_choice.startswith("UD"):
+    font_name = "UD Digi Kyokasho NK-B"
+else:
+    font_name = "Noto Sans JP"
+
 # フォントサイズ
 st.subheader("フォントサイズ")
 fs_kanji = st.number_input("漢字フォントサイズ", value=84, min_value=10, max_value=200)
@@ -69,7 +85,7 @@ def parse_col_selector(raw, df_cols):
         # 列名が本当に存在するか軽くチェック
         return raw
 
-def add_textbox(slide, text, y_percent, font_size, height_percent=0.18, bold=False):
+def add_textbox(slide, text, y_percent, font_size, height_percent=0.18, bold=False, font_name=None,):
     """
     中央寄せのテキストボックスを追加。
     * ワードラップを有効化（長文でも折り返し）
@@ -91,6 +107,8 @@ def add_textbox(slide, text, y_percent, font_size, height_percent=0.18, bold=Fal
     run.text = text
     run.font.size = Pt(font_size)
     run.font.bold = bold
+    if font_name:
+        run.font.name = font_name
     p.alignment = PP_ALIGN.CENTER
 
 def add_center_line(slide):
@@ -124,16 +142,16 @@ def create_ppt(df, col_kanji, col_hira, outfile_base: str):
 
         # --- Slide 1: 漢字のみ（上半分中央）
         s1 = prs.slides.add_slide(prs.slide_layouts[6])
-        add_textbox(s1, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
+        add_textbox(s1, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True, font_name=font_name,)
         add_center_line(s1)
 
         # --- Slide 2: 漢字 + ふりがな + 訳語
         s2 = prs.slides.add_slide(prs.slide_layouts[6])
-        add_textbox(s2, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True)
-        add_textbox(s2, hira,  hira_y_percent,  fs_hira,  height_percent=0.20)
+        add_textbox(s2, kanji, kanji_y_percent, fs_kanji, height_percent=0.22, bold=True, font_name=font_name,)
+        add_textbox(s2, hira,  hira_y_percent,  fs_hira,  height_percent=0.20, font_name=font_name,)
 
         translations = [translate_word(kanji, lang) for lang in target_languages]
-        add_textbox(s2, "   ".join(translations), trans_y_percent, fs_trans, height_percent=0.22)
+        add_textbox(s2, "   ".join(translations), trans_y_percent, fs_trans, height_percent=0.22, font_name=font_name,)
 
         add_center_line(s2)
 
