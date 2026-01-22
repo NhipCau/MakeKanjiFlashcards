@@ -151,7 +151,7 @@ def create_ppt(df, col_kanji, col_hira, outfile_base: str):
         add_textbox(s2, hira,  hira_y_percent,  fs_hira,  height_percent=0.20, font_name=font_name,)
 
         translations = [translate_word(kanji, lang) for lang in target_languages]
-        add_textbox(s2, "   ".join(translations), trans_y_percent, fs_trans, height_percent=0.22, font_name=font_name,)
+        add_textbox(s2, "   ".join(translations), trans_y_percent, fs_trans, height_percent=0.22)
 
         add_center_line(s2)
 
