@@ -1,14 +1,14 @@
 name: Keep Streamlit App Alive
-
 on:
   schedule:
-    - cron: "*/10 * * * *"   # 10分ごとに実行
-  workflow_dispatch:         # 手動実行もできるように
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
 
 jobs:
   keepalive:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Curl Streamlit App
+      - name: Wake Streamlit
         run: |
-          curl -A "Mozilla/5.0" -L https://makekanjiflashcards.streamlit.app/
+          curl -L -A "Mozilla/5.0" https://makekanjiflashcards.streamlit.app/ > /dev/null 2>&1
