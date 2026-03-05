@@ -8,9 +8,7 @@ on:
 jobs:
   keepalive:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Wake Streamlit
-        steps: - name: Curl Streamlit App
+      - name: Curl Streamlit App
         run: |
-          curl -s -o /dev/null https://makevocabpiccard.streamlit.app/
+          curl -s -o /dev/null https://makekanjiflashcards.streamlit.app/
